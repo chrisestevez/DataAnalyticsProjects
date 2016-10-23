@@ -1,0 +1,133 @@
+---
+title: "Untitled"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+library("getPass")
+library("wordcloud")
+library("RColorBrewer")
+library("stringr")
+library("RCurl")
+library("bitops")
+library("RMySQL")
+
+url = "https://raw.githubusercontent.com/chrisestevez/DataAnalyticsProjects/master/Project3/JobPostingData.txt"
+
+Data = getURL(url)
+
+```
+
+#Data Gathering
+```{r cars, message=FALSE, warning=FALSE}
+#Below code creates data frame and searches text files for key words
+
+DataFrame =data.frame(c(
+SQL = sum(str_count(Data, "sql|SQL")),
+Teradata = sum(str_count(Data, "Teradata")),
+MySQL = sum(str_count(Data, "mysql|MySql | MySQL")),
+Oracle = sum(str_count(Data, "oracle|Oracle")),
+Sybase = sum(str_count(Data, "Sybase")),
+DB2 = sum(str_count(Data, "DB2")),
+PostgresSQL = sum(str_count(Data, "Postgres|PostgreSQL")),
+SAS = sum(str_count(Data, "SAS")),
+Python = sum(str_count(Data, "Python|python")),
+PHP = sum(str_count(Data, "php|PHP")),
+Ruby = sum(str_count(Data, "Ruby|ruby")),
+Matlab = sum(str_count(Data, "Matlab|MATLAB")),
+Java = sum(str_count(Data, "Java|java")),
+MongoDB = sum(str_count(Data, "MongoDB|mongodb")),
+Hadoop = sum(str_count(Data, "Hadoop")),
+Spark = sum(str_count(Data, "Spark")),
+SPSS = sum(str_count(Data, "SPSS")),
+Tableau = sum(str_count(Data, "Tableau")),
+Excel = sum(str_count(Data, "excel")),
+Statistics = sum(str_count(Data, "Statistics|statistical|Statistics")),
+Modeling = sum(str_count(Data, "modeling")),
+Pig = sum(str_count(Data, "Pig|PIG")),
+MapReduce = sum(str_count(Data, "MapReduce|Map-Reduce|map reduce|Map Reduce")),
+Hive = sum(str_count(Data, "Hive")),
+Weka = sum(str_count(Data, "Weka|weka")),
+UNIXLinux = sum(str_count(Data, "UNIX|Linux")),
+Scala = sum(str_count(Data, "scala")),
+AWS = sum(str_count(Data, "AWS")),
+NoSQL = sum(str_count(Data, "NoSQL| No-SQL | nosql")),
+MachineLearning = sum(str_count(Data, "machinelearning|machine learning|MachineLearning|Machine Learning")),
+Perl = sum(str_count(Data, "Perl")),
+Kafka = sum(str_count(Data, "Kafka")),
+Visualization = sum(str_count(Data, "visualization")),
+HTML = sum(str_count(Data, "HTML")),
+CSS = sum(str_count(Data, "CSS")),
+PowerPoint = sum(str_count(Data, "PowerPoint|Powerpoint")),
+JQuery = sum(str_count(Data, "JQuery")),
+JavaScript = sum(str_count(Data, "JavaScript|Javascript")),
+Cassandra = sum(str_count(Data, "Cassandra")),
+Aerospike = sum(str_count(Data, "Aerospike")),
+Vertica = sum(str_count(Data, "Vertica")),
+Zookeeper = sum(str_count(Data, "Zookeeper")),
+JSON = sum(str_count(Data, "json|JSON")),
+Communication = sum(str_count(Data, "communication|Communicator|communicator")),
+Interpersonal = sum(str_count(Data, "interpersonal")),
+Leadership = sum(str_count(Data, "Leadership")),
+team = sum(str_count(Data, "team|teamwork")),
+Motivated = sum(str_count(Data, "motivated")),
+ProblemSolving = sum(str_count(Data, "Problem solving|problem solving|Problem solver|problem solvers")),
+Creativity = sum(str_count(Data, "creativity|Creative|creativity")),
+Collaborate = sum(str_count(Data, "collaborate|collaboration|Collaborates|collaborative")),
+Energetic = sum(str_count(Data, "Energetic")),
+Organized = sum(str_count(Data, "Organized|organized")),
+Independent = sum(str_count(Data, "Independent|independently")),
+Listening = sum(str_count(Data, "listening|listen")),
+Presentation = sum(str_count(Data, "presentations|presentation")),
+R = sum(str_count(Data, ", R,| R,|, R | R "))
+))
+
+colnames(DataFrame) = c("total")
+#here i export a csv file to load to the data base
+
+#write.csv(DataFrame, file="Frequency.csv",row.names=TRUE, col.names = FALSE)
+```
+
+```{r mysql, message=FALSE, warning=FALSE}
+#Their are two csv files that  must be loades to the database
+# 1 the description file stating the cat and type of skill.
+# 2 frequency file generated after performing the word count.
+# 3 verify csv file integrity remove empty rows.
+# 4 must run database script with proper file location
+
+
+ # set MySQL information
+Yuser = 'root'
+Ydbname ='607project3'
+Yhost = 'localhost'
+# create db connection with password promt
+mydb = dbConnect(MySQL(), user= Yuser, password=getPass('Enter Database Password'), dbname=Ydbname, host=Yhost)
+# query for the view
+query = dbSendQuery(mydb,"select * from reportingdata;")
+# place query values in data frame
+databasedf = data.frame( fetch(query, n=-1))
+# close database connection
+dbDisconnect(mydb)
+
+
+
+```
+
+```{r charts, fig.width=12, message=FALSE, warning=FALSE}
+
+#source for wordcloud usage
+#http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know
+
+
+wordcloud(words =databasedf$skillname, freq = databasedf$FrequencyTotal, min.freq = 1,
+          max.words=200, random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
+
+
+
+```
