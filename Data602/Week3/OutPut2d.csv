@@ -1,0 +1,15 @@
+,BuyingPrice,MaintenancePrice,Doors,Persons,LugBoot,Safety,Acceptability
+59,vhigh,med,4,4,big,low,unacc
+110,vhigh,med,4,more,big,med,acc
+148,vhigh,med,4,more,big,high,acc
+258,vhigh,med,4,4,big,low,unacc
+492,vhigh,med,4,4,small,high,acc
+586,vhigh,med,4,4,big,med,acc
+617,vhigh,med,4,4,med,low,unacc
+804,vhigh,med,4,more,big,high,acc
+946,vhigh,med,4,more,med,low,unacc
+948,vhigh,med,4,4,small,high,acc
+1006,vhigh,med,4,more,small,low,unacc
+1041,vhigh,med,4,4,small,low,unacc
+1231,vhigh,med,4,4,big,high,acc
+1260,vhigh,med,4,4,small,med,unacc
